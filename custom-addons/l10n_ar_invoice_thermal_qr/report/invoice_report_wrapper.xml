@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template wrapper que decide qué template usar según el origen -->
+        <template id="report_invoice_document_inherit" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+                <!-- Si la factura viene del POS, usar template térmico -->
+                <t t-if="o.pos_order_ids">
+                    <t t-call="l10n_ar_invoice_thermal_qr.report_invoice_thermal_80mm"/>
+                </t>
+                <!-- Si no viene del POS, usar template estándar A4 -->
+                <t t-else="">
+                    <t t-call="web.external_layout">
+                        <t t-set="o" t-value="o.with_context(lang=lang)"/>
+                        <t t-set="forced_vat" t-value="o.fiscal_position_id.foreign_vat"/>
+                        
+                        <div class="page">
+                            <t t-call="account.report_invoice_document_content"/>
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

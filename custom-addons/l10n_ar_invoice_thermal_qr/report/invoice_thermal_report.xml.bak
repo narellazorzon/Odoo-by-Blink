@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template principal para factura térmica 80mm -->
+        <template id="report_invoice_thermal_80mm">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page thermal-invoice-80mm">
+                        <!-- Encabezado de la empresa -->
+                        <div class="thermal-header text-center">
+                            <h3 style="margin: 0; font-size: 14pt;">
+                                <strong t-field="o.company_id.name"/>
+                            </h3>
+                            <div style="font-size: 9pt; margin-top: 2mm;">
+                                <div t-if="o.company_id.vat">
+                                    CUIT: <span t-field="o.company_id.vat"/>
+                                </div>
+                                <div t-if="o.company_id.street">
+                                    <span t-field="o.company_id.street"/>
+                                </div>
+                                <div>
+                                    <span t-if="o.company_id.city" t-field="o.company_id.city"/>,
+                                    <span t-if="o.company_id.state_id" t-field="o.company_id.state_id.name"/>
+                                </div>
+                                <div t-if="o.company_id.phone">
+                                    Tel: <span t-field="o.company_id.phone"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Tipo de comprobante -->
+                        <div class="thermal-document-type text-center">
+                            <h2 style="margin: 2mm 0; font-size: 18pt;">
+                                <strong t-field="o.l10n_latam_document_type_id.name"/>
+                            </h2>
+                            <div style="font-size: 10pt;">
+                                <strong>
+                                    Nro: <span t-field="o.name"/>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Datos del cliente -->
+                        <div class="thermal-customer" style="font-size: 9pt; margin: 3mm 0;">
+                            <div><strong>CLIENTE:</strong></div>
+                            <div><span t-field="o.partner_id.name"/></div>
+                            <div t-if="o.partner_id.vat">
+                                CUIT/DNI: <span t-field="o.partner_id.vat"/>
+                            </div>
+                            <div t-if="o.partner_id.street">
+                                <span t-field="o.partner_id.street"/>
+                            </div>
+                            <div>
+                                <span t-if="o.partner_id.city" t-field="o.partner_id.city"/>,
+                                <span t-if="o.partner_id.state_id" t-field="o.partner_id.state_id.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Datos del comprobante -->
+                        <div class="thermal-invoice-info" style="font-size: 9pt; margin: 2mm 0;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>Fecha:</span>
+                                <span t-field="o.invoice_date"/>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;" t-if="o.invoice_date_due">
+                                <span>Vencimiento:</span>
+                                <span t-field="o.invoice_date_due"/>
+                            </div>
+                            <div style="display: flex; justify-content: space-between;" t-if="o.invoice_payment_term_id">
+                                <span>Condición de pago:</span>
+                                <span t-field="o.invoice_payment_term_id.name"/>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Líneas de factura -->
+                        <div class="thermal-lines" style="font-size: 8pt; margin: 2mm 0;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="border-bottom: 1px dashed #000;">
+                                        <th style="text-align: left; width: 50%;">Producto</th>
+                                        <th style="text-align: center; width: 15%;">Cant.</th>
+                                        <th style="text-align: right; width: 35%;">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
+                                        <tr>
+                                            <td style="padding: 1mm 0;">
+                                                <span t-field="line.product_id.name"/>
+                                            </td>
+                                            <td style="text-align: center; padding: 1mm 0;">
+                                                <span t-field="line.quantity"/>
+                                            </td>
+                                            <td style="text-align: right; padding: 1mm 0;">
+                                                <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Totales -->
+                        <div class="thermal-totals" style="font-size: 10pt; margin: 2mm 0;">
+                            <div style="display: flex; justify-content: space-between; margin: 1mm 0;">
+                                <span>Subtotal:</span>
+                                <strong>
+                                    <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </strong>
+                            </div>
+                            <div class="thermal-divider" style="margin: 2mm 0;">----------------------------------------</div>
+                            <div style="display: flex; justify-content: space-between; font-size: 12pt;">
+                                <strong>TOTAL:</strong>
+                                <strong>
+                                    <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                </strong>
+                            </div>
+                        </div>
+
+                        <!-- Separador -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Datos AFIP -->
+                        <div class="thermal-afip-data text-center" style="font-size: 8pt; margin: 3mm 0;">
+                            <div t-if="o.afip_auth_code" style="margin: 1mm 0;">
+                                <strong>CAE:</strong> <span t-field="o.afip_auth_code"/>
+                            </div>
+                            <div t-if="o.afip_auth_code_due" style="margin: 1mm 0;">
+                                <strong>Vto. CAE:</strong> <span t-field="o.afip_auth_code_due"/>
+                            </div>
+                        </div>
+
+                        <!-- Código QR AFIP -->
+                        <div class="thermal-qr text-center" t-if="o.afip_qr_code" style="margin: 3mm 0;">
+                            <img t-att-src="image_data_uri(o.afip_qr_code)"
+                                 alt="QR Code AFIP"
+                                 style="width: 40mm; height: 40mm;"/>
+                            <div style="font-size: 7pt; margin-top: 1mm;">
+                                Escanee para verificar en AFIP
+                            </div>
+                        </div>
+
+                        <!-- Separador final -->
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Pie de página -->
+                        <div class="thermal-footer text-center" style="font-size: 7pt; margin: 2mm 0;">
+                            <div>¡Gracias por su compra!</div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

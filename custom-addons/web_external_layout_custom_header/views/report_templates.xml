@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        Extend external_layout_standard to support custom_header and create
+        footer_left_column/footer_right_column structure for Argentina compatibility
+    -->
+    <template id="external_layout_standard_with_custom_header" inherit_id="web.external_layout_standard" priority="99">
+        
+        <!-- Add custom_header before standard header if defined -->
+        <xpath expr="//div[@class='d-flex justify-content-between align-items-center mb-2']" position="before">
+            <t t-if="custom_header">
+                <t t-call="{{custom_header}}"/>
+            </t>
+        </xpath>
+        
+        <!-- Hide standard header if custom_header is set -->
+        <xpath expr="//div[@class='d-flex justify-content-between align-items-center mb-2']" position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        
+        <xpath expr="//div[@class='row']/div[@name='company_address']/.." position="attributes">
+            <attribute name="t-if">not custom_header</attribute>
+        </xpath>
+        
+        <!-- ALWAYS create footer_left_column and footer_right_column for Argentina compatibility -->
+        <!-- This allows AFIP module xpaths to find these elements -->
+        <xpath expr="//div[@class='o_footer_content d-flex border-top pt-2']" position="replace">
+            <div class="row">
+                <div name="footer_left_column" class="col-8 text-start">
+                    <!-- If NO custom_footer, show standard company footer here -->
+                    <div t-if="not custom_footer" t-field="company.report_footer"/>
+                </div>
+                <div name="footer_right_column" class="col-4 text-end">
+                    <div name="pager" t-if="report_type == 'pdf'">
+                        <!-- Document name if configured -->
+                        <div t-if="not custom_footer and display_name_in_footer" t-out="o.name" class="text-muted"/>
+                        <!-- Page numbers -->
+                        <div class="text-nowrap">Page: <span class="page"/> / <span class="topage"/></div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+        
+    </template>
+</odoo>

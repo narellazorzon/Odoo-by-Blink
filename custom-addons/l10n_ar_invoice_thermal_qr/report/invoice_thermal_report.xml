@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_thermal_80mm">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page" style="width: 74mm; font-family: monospace; font-size: 8pt; margin: 0; padding: 2mm;">
+                        
+                        <!-- Empresa -->
+                        <div style="text-align: center; margin-bottom: 3mm;">
+                            <div style="font-weight: bold; font-size: 10pt;"><span t-field="o.company_id.name"/></div>
+                            <div style="font-size: 7pt;">CUIT: <span t-field="o.company_id.vat"/></div>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Comprobante -->
+                        <div style="text-align: center; margin-bottom: 3mm;">
+                            <div style="font-weight: bold; font-size: 11pt;"><span t-field="o.l10n_latam_document_type_id.name"/></div>
+                            <div style="font-size: 8pt;">Nro: <span t-field="o.name"/></div>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Cliente -->
+                        <div style="margin-bottom: 3mm; font-size: 7pt;">
+                            <div style="font-weight: bold;">CLIENTE:</div>
+                            <div><span t-field="o.partner_id.name"/></div>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Fecha -->
+                        <div style="margin-bottom: 3mm; font-size: 7pt;">
+                            Fecha: <span t-field="o.invoice_date"/>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Productos -->
+                        <t t-foreach="o.invoice_line_ids" t-as="line">
+                            <t t-if="line.product_id and line.quantity and line.price_unit">
+                                <div style="margin-bottom: 2mm; font-size: 7pt;">
+                                    <div><strong><span t-field="line.product_id.name"/></strong></div>
+                                    <div>
+                                        <span t-esc="'%.2f' % line.quantity"/> x $<span t-esc="'%.2f' % line.price_unit"/> = $<span t-esc="'%.2f' % line.price_subtotal"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </t>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Totales con IVA -->
+                        <div style="margin-bottom: 3mm; font-size: 8pt;">
+                            <div>Subtotal: $$<span t-esc="'%.2f' % o.amount_untaxed"/></div>
+                            <div style="font-size: 10pt; font-weight: bold; margin-top: 1mm;">
+                                TOTAL: $$<span t-esc="'%.2f' % o.amount_total"/>
+                            </div>
+                        </div>
+                        
+                        <!-- IVA contenido según Ley 27.743 -->
+                        <div style="font-size: 7pt; margin-bottom: 3mm; font-style: italic;">
+                            <em>IVA contenido: $$<span t-esc="'%.2f' % o.amount_tax"/></em>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- CAE -->
+                        <div t-if="o.afip_auth_code" style="text-align: center; margin-bottom: 3mm; font-size: 7pt;">
+                            <div><strong>CAE:</strong> <span t-field="o.afip_auth_code"/></div>
+                            <div t-if="o.afip_auth_code_due"><strong>Vto CAE:</strong> <span t-field="o.afip_auth_code_due"/></div>
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Ley de Transparencia Fiscal -->
+                        <div style="text-align: center; font-size: 6pt; margin-bottom: 3mm; line-height: 1.2;">
+                            Regimen de Transparencia Fiscal para el Consumidor Final (Ley 27.743)
+                        </div>
+                        
+                        <div style="border-top: 1px dashed #000; margin: 2mm 0;"/>
+                        
+                        <!-- Footer -->
+                        <div style="text-align: center; font-size: 7pt; margin-top: 3mm;">
+                            Gracias por su compra
+                        </div>
+                        
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Argentina - Facturas Térmicas con QR AFIP',
+    'version': '18.0.1.0.0',
+    'category': 'Accounting/Localizations/Reporting',
+    'summary': 'Agrega reporte térmico 80mm y código QR AFIP a facturas electrónicas',
+    'description': """
+        Módulo de localización Argentina - Extensión de Facturación Electrónica
+        ==========================================================================
+        
+        Este módulo agrega:
+        * Código QR de AFIP en facturas electrónicas (RG 4892)
+        * Reporte térmico de 80mm para impresoras térmicas
+        * Mantiene compatibilidad con reporte A4 estándar
+        * Integración automática con POS
+        
+        El código QR sigue la especificación oficial de AFIP:
+        https://www.afip.gob.ar/fe/qr/documentos/QRespecificaciones.pdf
+    """,
+    'author': 'Somos Blink',
+    'website': 'https://somosblink.com',
+    'depends': [
+        'account',
+        'l10n_ar',
+        'l10n_ar_afipws_fe',
+    ],
+    'external_dependencies': {
+        'python': ['qrcode', 'PIL'],
+    },
+    'data': [
+        'report/paperformat.xml',
+        'data/report_data.xml',
+        'report/invoice_thermal_report.xml',
+    ],
+    'assets': {
+        'web.report_assets_common': [
+            'l10n_ar_invoice_thermal_qr/static/src/css/thermal_invoice.css',
+        ],
+    },
+    'installable': True,
+    'application': False,
+    'auto_install': False,
+    'license': 'LGPL-3',
+}

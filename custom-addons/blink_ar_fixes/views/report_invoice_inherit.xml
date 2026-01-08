@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document_inherit" 
+              inherit_id="account.report_invoice_document">
+        
+        <!-- Agregar footer_left_column después de informations -->
+        <xpath expr="//div[@id='informations']" position="after">
+            <div name="footer_left_column" class="col-auto mw-100 mb-2">
+                <!-- Contenedor para QR de AFIP y otros elementos del footer izquierdo -->
+            </div>
+        </xpath>
+        
+        <!-- Agregar pager (paginación) después de footer_left_column -->
+        <xpath expr="//div[@name='footer_left_column']" position="after">
+            <div name="pager" class="col-auto mw-100 mb-2">
+                <!-- Contenedor para numeración de páginas -->
+            </div>
+        </xpath>
+        
+    </template>
+</odoo>

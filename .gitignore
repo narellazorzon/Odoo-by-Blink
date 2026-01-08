@@ -1,0 +1,39 @@
+# Caché y archivos locales
+.cache/
+.local/
+*.pyc
+__pycache__/
+
+# Backups
+backups/
+backup-a2systems/
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales
+*.tmp
+*.swp
+*.swo
+*~
+
+# Filestore (puede ser muy grande)
+odoo18/.local/
+odoo18/filestore/
+
+# Sesiones
+odoo18/sessions/
+
+# Archivos de configuración con credenciales (comentar si quieres incluirlos)
+# *.conf
+# odoo.conf
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema
+.DS_Store
+Thumbs.db

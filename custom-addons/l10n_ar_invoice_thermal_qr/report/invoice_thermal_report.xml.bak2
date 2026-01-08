@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_invoice_thermal_80mm">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="page thermal-invoice-80mm">
+                        <!-- Encabezado -->
+                        <div class="thermal-header text-center">
+                            <h3><strong t-field="o.company_id.name"/></h3>
+                            <div>CUIT: <span t-field="o.company_id.vat"/></div>
+                        </div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Comprobante -->
+                        <div class="thermal-document-type text-center">
+                            <h2><strong t-field="o.l10n_latam_document_type_id.name"/></h2>
+                            <div><strong>Nro: <span t-field="o.name"/></strong></div>
+                        </div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Cliente -->
+                        <div class="thermal-customer">
+                            <div><strong>CLIENTE:</strong></div>
+                            <div><span t-field="o.partner_id.name"/></div>
+                            <div t-if="o.partner_id.vat">CUIT/DNI: <span t-field="o.partner_id.vat"/></div>
+                        </div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Fecha -->
+                        <div>Fecha: <span t-field="o.invoice_date"/></div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Productos -->
+                        <table style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="text-align: left;">Producto</th>
+                                    <th style="text-align: center;">Cant</th>
+                                    <th style="text-align: right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
+                                    <tr>
+                                        <td><span t-field="line.product_id.name"/></td>
+                                        <td style="text-align: center;"><span t-field="line.quantity"/></td>
+                                        <td style="text-align: right;"><span t-field="line.price_subtotal"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- Totales -->
+                        <div style="text-align: right;">
+                            <div>Subtotal: <span t-field="o.amount_untaxed"/></div>
+                            <div style="font-size: 14pt;"><strong>TOTAL: <span t-field="o.amount_total"/></strong></div>
+                        </div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <!-- CAE -->
+                        <div class="text-center" t-if="o.afip_auth_code">
+                            <div><strong>CAE:</strong> <span t-field="o.afip_auth_code"/></div>
+                            <div t-if="o.afip_auth_code_due"><strong>Vto CAE:</strong> <span t-field="o.afip_auth_code_due"/></div>
+                        </div>
+
+                        <div class="thermal-divider">========================================</div>
+
+                        <div class="text-center">¡Gracias por su compra!</div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>
