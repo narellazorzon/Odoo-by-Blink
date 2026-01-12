@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Paperformat personalizado para facturas A4 -->
+        <record id="paperformat_invoice_blink" model="report.paperformat">
+            <field name="name">Blink Invoice A4</field>
+            <field name="default" eval="True"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">40</field>
+            <field name="margin_bottom">25</field>
+            <field name="margin_left">10</field>
+            <field name="margin_right">10</field>
+            <field name="header_line" eval="False"/>
+            <field name="header_spacing">35</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <!-- Template principal de factura -->
+        <template id="report_invoice_document_blink" inherit_id="account.report_invoice_document" primary="True">
+
+            <!-- Estilos CSS modernos -->
+            <xpath expr="//t[@t-call='web.external_layout']" position="before">
+                <style>
+                    /* Estilos generales */
+                    body {
+                        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        font-size: 10pt;
+                        color: #333;
+                    }
+
+                    .page {
+                        padding: 20px;
+                    }
+
+                    /* Header de la empresa */
+                    .invoice-header {
+                        margin-bottom: 30px;
+                        border-bottom: 3px solid #2c3e50;
+                        padding-bottom: 20px;
+                    }
+
+                    .company-info {
+                        width: 65%;
+                        float: left;
+                    }
+
+                    .company-logo {
+                        max-height: 80px;
+                        max-width: 250px;
+                        margin-bottom: 10px;
+                    }
+
+                    .company-name {
+                        font-size: 18pt;
+                        font-weight: bold;
+                        color: #2c3e50;
+                        margin-bottom: 5px;
+                    }
+
+                    .company-details {
+                        font-size: 9pt;
+                        color: #666;
+                        line-height: 1.6;
+                    }
+
+                    /* Tipo de comprobante (Cuadro A, B, C) */
+                    .document-type-box {
+                        width: 30%;
+                        float: right;
+                        text-align: center;
+                        border: 3px solid #2c3e50;
+                        padding: 15px;
+                        background-color: #f8f9fa;
+                    }
+
+                    .document-letter {
+                        font-size: 48pt;
+                        font-weight: bold;
+                        color: #2c3e50;
+                        line-height: 1;
+                        margin-bottom: 5px;
+                    }
+
+                    .document-code {
+                        font-size: 8pt;
+                        color: #666;
+                        margin-top: 5px;
+                    }
+
+                    .document-number {
+                        font-size: 11pt;
+                        font-weight: bold;
+                        color: #2c3e50;
+                        margin-top: 10px;
+                        padding-top: 10px;
+                        border-top: 2px solid #dee2e6;
+                    }
+
+                    /* Sección de información */
+                    .info-section {
+                        clear: both;
+                        margin-top: 30px;
+                        margin-bottom: 20px;
+                    }
+
+                    .info-box {
+                        border: 1px solid #dee2e6;
+                        padding: 15px;
+                        border-radius: 5px;
+                        background-color: #f8f9fa;
+                    }
+
+                    .info-title {
+                        font-weight: bold;
+                        color: #2c3e50;
+                        font-size: 10pt;
+                        margin-bottom: 8px;
+                        text-transform: uppercase;
+                    }
+
+                    .info-row {
+                        margin-bottom: 5px;
+                        line-height: 1.5;
+                    }
+
+                    .info-label {
+                        font-weight: 600;
+                        color: #666;
+                        display: inline-block;
+                        width: 150px;
+                    }
+
+                    /* Tabla de productos */
+                    .invoice-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        margin-bottom: 20px;
+                    }
+
+                    .invoice-table thead {
+                        background-color: #2c3e50;
+                        color: white;
+                    }
+
+                    .invoice-table th {
+                        padding: 12px 8px;
+                        text-align: left;
+                        font-weight: 600;
+                        font-size: 9pt;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    }
+
+                    .invoice-table th.text-right,
+                    .invoice-table td.text-right {
+                        text-align: right;
+                    }
+
+                    .invoice-table th.text-center,
+                    .invoice-table td.text-center {
+                        text-align: center;
+                    }
+
+                    .invoice-table tbody tr {
+                        border-bottom: 1px solid #dee2e6;
+                    }
+
+                    .invoice-table tbody tr:hover {
+                        background-color: #f8f9fa;
+                    }
+
+                    .invoice-table td {
+                        padding: 10px 8px;
+                        font-size: 9pt;
+                    }
+
+                    .product-name {
+                        font-weight: 600;
+                        color: #2c3e50;
+                    }
+
+                    .product-description {
+                        font-size: 8pt;
+                        color: #666;
+                        margin-top: 3px;
+                    }
+
+                    /* Totales */
+                    .totals-section {
+                        margin-top: 30px;
+                        float: right;
+                        width: 45%;
+                    }
+
+                    .totals-table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    .totals-table tr {
+                        border-bottom: 1px solid #dee2e6;
+                    }
+
+                    .totals-table td {
+                        padding: 8px 10px;
+                        font-size: 10pt;
+                    }
+
+                    .totals-label {
+                        text-align: right;
+                        font-weight: 600;
+                        color: #666;
+                    }
+
+                    .totals-amount {
+                        text-align: right;
+                        font-weight: 600;
+                        color: #2c3e50;
+                        width: 40%;
+                    }
+
+                    .totals-final {
+                        background-color: #2c3e50;
+                        color: white !important;
+                        font-size: 12pt;
+                        font-weight: bold;
+                    }
+
+                    .totals-final td {
+                        padding: 12px 10px;
+                    }
+
+                    /* Impuestos detallados */
+                    .tax-detail {
+                        font-size: 8pt;
+                        color: #666;
+                        padding: 5px 10px;
+                    }
+
+                    /* CAE y QR */
+                    .cae-section {
+                        clear: both;
+                        margin-top: 40px;
+                        padding-top: 20px;
+                        border-top: 2px solid #dee2e6;
+                    }
+
+                    .cae-box {
+                        display: inline-block;
+                        width: 65%;
+                        vertical-align: top;
+                    }
+
+                    .qr-box {
+                        display: inline-block;
+                        width: 30%;
+                        text-align: center;
+                        vertical-align: top;
+                    }
+
+                    .cae-title {
+                        font-weight: bold;
+                        color: #2c3e50;
+                        margin-bottom: 5px;
+                    }
+
+                    .cae-info {
+                        font-size: 9pt;
+                        color: #666;
+                        line-height: 1.6;
+                    }
+
+                    /* Footer legal */
+                    .legal-footer {
+                        clear: both;
+                        margin-top: 30px;
+                        padding-top: 15px;
+                        border-top: 1px solid #dee2e6;
+                        font-size: 7pt;
+                        color: #999;
+                        text-align: center;
+                        line-height: 1.4;
+                    }
+
+                    /* Utilities */
+                    .clearfix::after {
+                        content: "";
+                        display: table;
+                        clear: both;
+                    }
+
+                    .mt-10 { margin-top: 10px; }
+                    .mt-20 { margin-top: 20px; }
+                    .mb-10 { margin-bottom: 10px; }
+                    .mb-20 { margin-bottom: 20px; }
+                </style>
+            </xpath>
+
+            <!-- Reemplazar todo el contenido del layout -->
+            <xpath expr="//t[@t-call='web.external_layout']" position="replace">
+                <t t-foreach="docs" t-as="o">
+                    <t t-set="o" t-value="o.with_context(lang=lang)"/>
+
+                    <div class="page">
+
+                        <!-- HEADER: Empresa y Tipo de Comprobante -->
+                        <div class="invoice-header clearfix">
+                            <div class="company-info">
+                                <!-- Logo -->
+                                <img t-if="o.company_id.logo"
+                                     t-att-src="image_data_uri(o.company_id.logo)"
+                                     class="company-logo"
+                                     alt="Logo"/>
+
+                                <!-- Nombre de la empresa -->
+                                <div class="company-name">
+                                    <span t-field="o.company_id.name"/>
+                                </div>
+
+                                <!-- Datos fiscales -->
+                                <div class="company-details">
+                                    <div t-if="o.company_id.street">
+                                        <span t-field="o.company_id.street"/>
+                                        <span t-if="o.company_id.street2"> - <span t-field="o.company_id.street2"/></span>
+                                    </div>
+                                    <div t-if="o.company_id.city">
+                                        <span t-field="o.company_id.zip"/>
+                                        <span t-field="o.company_id.city"/>
+                                        <span t-if="o.company_id.state_id"> - <span t-field="o.company_id.state_id.name"/></span>
+                                    </div>
+                                    <div t-if="o.company_id.vat">
+                                        <strong>CUIT:</strong> <span t-field="o.company_id.vat"/>
+                                    </div>
+                                    <div t-if="o.company_id.l10n_ar_afip_responsibility_type_id">
+                                        <strong>Condición IVA:</strong> <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id.name"/>
+                                    </div>
+                                    <div t-if="o.company_id.l10n_ar_gross_income_number">
+                                        <strong>Ingresos Brutos:</strong> <span t-field="o.company_id.l10n_ar_gross_income_number"/>
+                                    </div>
+                                    <div t-if="o.company_id.phone">
+                                        <strong>Tel:</strong> <span t-field="o.company_id.phone"/>
+                                    </div>
+                                    <div t-if="o.company_id.email">
+                                        <strong>Email:</strong> <span t-field="o.company_id.email"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cuadro tipo de comprobante -->
+                            <div class="document-type-box">
+                                <!-- Letra del comprobante (A, B, C, E, etc) -->
+                                <div class="document-letter">
+                                    <t t-if="o.l10n_latam_document_type_id">
+                                        <span t-esc="o.l10n_latam_document_type_id.name[0] if o.l10n_latam_document_type_id.name else 'X'"/>
+                                    </t>
+                                </div>
+
+                                <div class="document-code">
+                                    <span t-field="o.l10n_latam_document_type_id.name"/>
+                                </div>
+
+                                <!-- Número de comprobante -->
+                                <div class="document-number">
+                                    N° <span t-field="o.name"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN: Información del Cliente y Fechas -->
+                        <div class="info-section clearfix">
+                            <div style="width: 65%; float: left;">
+                                <div class="info-box">
+                                    <div class="info-title">Datos del Cliente</div>
+                                    <div class="info-row">
+                                        <span class="info-label">Razón Social:</span>
+                                        <span t-field="o.partner_id.name"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.vat">
+                                        <span class="info-label">CUIT/CUIL:</span>
+                                        <span t-field="o.partner_id.vat"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.l10n_ar_afip_responsibility_type_id">
+                                        <span class="info-label">Condición IVA:</span>
+                                        <span t-field="o.partner_id.l10n_ar_afip_responsibility_type_id.name"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.street">
+                                        <span class="info-label">Dirección:</span>
+                                        <span t-field="o.partner_id.street"/>
+                                        <span t-if="o.partner_id.street2"> - <span t-field="o.partner_id.street2"/></span>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.city">
+                                        <span class="info-label">Localidad:</span>
+                                        <span t-field="o.partner_id.zip"/>
+                                        <span t-field="o.partner_id.city"/>
+                                        <span t-if="o.partner_id.state_id"> - <span t-field="o.partner_id.state_id.name"/></span>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.phone">
+                                        <span class="info-label">Teléfono:</span>
+                                        <span t-field="o.partner_id.phone"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.partner_id.email">
+                                        <span class="info-label">Email:</span>
+                                        <span t-field="o.partner_id.email"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="width: 32%; float: right;">
+                                <div class="info-box">
+                                    <div class="info-title">Datos del Comprobante</div>
+                                    <div class="info-row">
+                                        <span class="info-label">Fecha:</span>
+                                        <span t-field="o.invoice_date"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.invoice_date_due">
+                                        <span class="info-label">Vencimiento:</span>
+                                        <span t-field="o.invoice_date_due"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.invoice_payment_term_id">
+                                        <span class="info-label">Condición:</span>
+                                        <span t-field="o.invoice_payment_term_id.name"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.invoice_origin">
+                                        <span class="info-label">Origen:</span>
+                                        <span t-field="o.invoice_origin"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.ref">
+                                        <span class="info-label">Referencia:</span>
+                                        <span t-field="o.ref"/>
+                                    </div>
+                                    <div class="info-row" t-if="o.user_id">
+                                        <span class="info-label">Vendedor:</span>
+                                        <span t-field="o.user_id.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TABLA DE PRODUCTOS -->
+                        <table class="invoice-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 8%;">Código</th>
+                                    <th style="width: 37%;">Descripción</th>
+                                    <th class="text-center" style="width: 10%;">Cantidad</th>
+                                    <th class="text-right" style="width: 12%;">Precio Unit.</th>
+                                    <th class="text-center" style="width: 8%;">IVA</th>
+                                    <th class="text-right" style="width: 12%;">Subtotal</th>
+                                    <th class="text-right" style="width: 13%;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o.invoice_line_ids" t-as="line">
+                                    <t t-if="line.display_type == 'product'">
+                                        <tr>
+                                            <td>
+                                                <span t-if="line.product_id.default_code" t-field="line.product_id.default_code"/>
+                                            </td>
+                                            <td>
+                                                <div class="product-name">
+                                                    <span t-field="line.name"/>
+                                                </div>
+                                                <div class="product-description" t-if="line.product_id.description_sale">
+                                                    <span t-field="line.product_id.description_sale"/>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <span t-field="line.quantity"/>
+                                                <span t-if="line.product_uom_id" t-field="line.product_uom_id.name"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="line.price_unit" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                            <td class="text-center">
+                                                <t t-foreach="line.tax_ids" t-as="tax">
+                                                    <span t-esc="'%.1f' % tax.amount"/>%<br/>
+                                                </t>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="line.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="line.price_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <!-- Líneas de sección o nota -->
+                                    <t t-elif="line.display_type in ['line_section', 'line_note']">
+                                        <tr>
+                                            <td colspan="7" style="background-color: #f8f9fa; padding: 8px; font-weight: 600; color: #2c3e50;">
+                                                <span t-field="line.name"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- TOTALES E IMPUESTOS -->
+                        <div class="totals-section">
+                            <table class="totals-table">
+                                <!-- Subtotal -->
+                                <tr>
+                                    <td class="totals-label">Subtotal:</td>
+                                    <td class="totals-amount">
+                                        <span t-field="o.amount_untaxed" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+
+                                <!-- Impuestos detallados -->
+                                <t t-foreach="o.amount_by_group" t-as="amount_by_group">
+                                    <tr>
+                                        <td class="totals-label">
+                                            <span t-esc="amount_by_group[0]"/>
+                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) == 0">
+                                                <span class="tax-detail"> (incluido)</span>
+                                            </t>
+                                        </td>
+                                        <td class="totals-amount">
+                                            <span t-esc="amount_by_group[1]" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                                <!-- Percepciones y retenciones -->
+                                <t t-if="o.line_ids.filtered(lambda l: l.tax_line_id and 'percep' in l.name.lower())">
+                                    <tr>
+                                        <td colspan="2" style="padding-top: 10px;">
+                                            <div style="font-size: 8pt; color: #666;">
+                                                <strong>Percepciones/Retenciones:</strong>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <t t-foreach="o.line_ids.filtered(lambda l: l.tax_line_id and 'percep' in l.name.lower())" t-as="perc">
+                                        <tr>
+                                            <td class="totals-label" style="font-size: 8pt;">
+                                                <span t-field="perc.name"/>
+                                            </td>
+                                            <td class="totals-amount" style="font-size: 8pt;">
+                                                <span t-field="perc.price_subtotal" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+
+                                <!-- Total final -->
+                                <tr class="totals-final">
+                                    <td class="totals-label">TOTAL:</td>
+                                    <td class="totals-amount">
+                                        <span t-field="o.amount_total" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Nota de IVA incluido para Consumidor Final -->
+                            <div t-if="o.l10n_latam_document_type_id.code in ['11', '6', '51']"
+                                 style="margin-top: 10px; font-size: 8pt; color: #666; font-style: italic; text-align: right;">
+                                * IVA incluido según Ley 27.743
+                            </div>
+                        </div>
+
+                        <!-- CAE Y QR CODE -->
+                        <div class="cae-section" t-if="o.afip_auth_code">
+                            <div class="cae-box">
+                                <div class="cae-title">Comprobante Autorizado Electrónicamente</div>
+                                <div class="cae-info">
+                                    <div><strong>CAE:</strong> <span t-field="o.afip_auth_code"/></div>
+                                    <div t-if="o.afip_auth_code_due">
+                                        <strong>Fecha de Vencimiento CAE:</strong>
+                                        <span t-field="o.afip_auth_code_due"/>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- QR Code (si existe) -->
+                            <div class="qr-box" t-if="o.l10n_ar_afip_qr_code">
+                                <img t-att-src="image_data_uri(o.l10n_ar_afip_qr_code)"
+                                     style="max-width: 120px; max-height: 120px;"
+                                     alt="QR Code"/>
+                            </div>
+                        </div>
+
+                        <!-- Notas adicionales -->
+                        <div t-if="o.narration" style="clear: both; margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-left: 3px solid #2c3e50;">
+                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 5px;">Observaciones:</div>
+                            <div style="font-size: 9pt; color: #666;">
+                                <span t-field="o.narration"/>
+                            </div>
+                        </div>
+
+                        <!-- Footer legal -->
+                        <div class="legal-footer">
+                            <div t-if="o.move_type in ['out_invoice', 'out_refund']">
+                                Este documento es original y su detalle y condiciones se encuentran registrados en nuestros sistemas informáticos.
+                            </div>
+                            <div style="margin-top: 5px;">
+                                Régimen de Transparencia Fiscal para el Consumidor Final - Ley 27.743
+                            </div>
+                        </div>
+
+                    </div>
+                </t>
+            </xpath>
+
+        </template>
+
+        <!-- Reporte para Facturas -->
+        <record id="account.account_invoices" model="ir.actions.report">
+            <field name="paperformat_id" ref="paperformat_invoice_blink"/>
+        </record>
+
+    </data>
+</odoo>
