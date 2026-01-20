@@ -25,9 +25,29 @@ odoo18/filestore/
 # Sesiones
 odoo18/sessions/
 
-# Archivos de configuración con credenciales (comentar si quieres incluirlos)
-# *.conf
-# odoo.conf
+# Archivos de configuración con credenciales
+# NOTA: Los archivos en config/ están incluidos para facilitar desarrollo
+# Para producción, considerar externalizar secretos a variables de entorno
+# Descomentar la siguiente línea si hay configs de producción con secretos reales:
+# config/hosts/*.production.conf
+
+# SSH Keys y certificados
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Variables de entorno
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Archivos sensibles
+secrets/
+credentials/
+*.secret
 
 # IDE
 .vscode/
@@ -37,3 +57,7 @@ odoo18/sessions/
 # Sistema
 .DS_Store
 Thumbs.db
+
+# Archivos de debug específicos del proyecto
+odoo_invoice_debug.html
+report_invoice_custom_servidor.xml

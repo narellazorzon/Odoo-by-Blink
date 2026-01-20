@@ -21,11 +21,6 @@
         <!-- Template principal de factura - Hereda del template argentino -->
         <template id="report_invoice_document_blink" inherit_id="l10n_ar.report_invoice_document">
 
-            <!-- Agregar meta charset UTF-8 -->
-            <xpath expr="//head" position="inside">
-                <meta charset="UTF-8"/>
-            </xpath>
-
             <!-- Estilos CSS modernos -->
             <xpath expr="//t[@t-call='web.external_layout']" position="before">
                 <style>
@@ -585,7 +580,7 @@
                             <!-- QR Code (si existe) - se oculta si no existe el campo -->
                             <t t-try="">
                                 <div class="qr-box" t-if="o.afip_qr_code">
-                                    <img t-att-src="'data:image/png;base64,' + o.afip_qr_code"
+                                    <img t-att-src="image_data_uri(o.afip_qr_code)"
                                          style="max-width: 120px; max-height: 120px;"
                                          alt="QR Code"/>
                                 </div>
