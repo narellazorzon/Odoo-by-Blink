@@ -10,8 +10,8 @@
 
 | Host/Subdominio | Cliente | Entorno | Rama Deploy | Base de Datos | Archivo Config | Puerto | Notas |
 |-----------------|---------|---------|-------------|---------------|----------------|--------|-------|
-| **corteperfecto.somosblink.com** | Corte Perfecto | `production` | `main` | `corteperfecto-prod` | `corteperfecto.somosblink.com.conf` | 8075 | Cliente activo - Producción (por crear) |
-| **corteperfecto-test.somosblink.com** | Corte Perfecto | `test` | `test` | `corteperfecto-test` | `corteperfecto-test.somosblink.com.conf` | 8075 | Testing pre-prod - BD existente |
+| **corteperfecto.somosblink.com** | Corte Perfecto | `production` | `main` | `corteperfecto-prod` | `corteperfecto.somosblink.com.conf` | 8076 | Cliente activo - Producción (por crear) |
+| **corteperfecto-test.somosblink.com** | Corte Perfecto | `test` | `dev` | `corteperfecto-test` | `corteperfecto-test.somosblink.com.conf` | 8075 | Testing pre-prod - BD existente (ACTIVO) |
 | **demo.somosblink.com** | Blink (interno) | `demo` | `demo` | `demo-showcase` | `demo.somosblink.com.conf` | 8077 | Demos para prospectos, datos de ejemplo |
 | **blink.somosblink.com** | Blink (interno) | `internal` | `blink` | `blink-internal` | `blink.somosblink.com.conf` | 8078 | Uso interno de Blink, desarrollo avanzado |
 | **localhost** | Desarrollo | `local` | `dev` | `odoo-dev` | `localhost.conf` | 8069 | Entorno de desarrollo local |
