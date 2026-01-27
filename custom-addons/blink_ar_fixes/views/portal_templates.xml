@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Ocultar logo default de Odoo en el portal, mostrar placeholder -->
+    <template id="portal_hide_default_logo" inherit_id="portal.frontend_layout">
+        <xpath expr="//a[hasclass('navbar-brand','logo')]" position="replace">
+            <a href="/" class="navbar-brand logo">
+                <t t-if="res_company.uses_default_logo">
+                    <span class="text-muted" style="font-size: 14px; font-style: italic;">Your Logo</span>
+                </t>
+                <t t-else="">
+                    <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
+                </t>
+            </a>
+        </xpath>
+    </template>
+</odoo>

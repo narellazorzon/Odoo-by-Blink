@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_ticket_80mm">
+            <t t-call="web.basic_layout">
+                <t t-foreach="docs" t-as="o">
+                    <div class="ticket-80mm">
+
+                        <!-- Header: Empresa -->
+                        <div class="ticket-header">
+                            <div class="company-name" t-field="o.company_id.name"/>
+                            <div class="company-info">
+                                <t t-if="o.company_id.l10n_ar_afip_responsibility_type_id">
+                                    <span t-field="o.company_id.l10n_ar_afip_responsibility_type_id.name"/>
+                                </t>
+                            </div>
+                            <div class="company-info">
+                                CUIT: <span t-field="o.company_id.vat"/>
+                            </div>
+                            <t t-if="o.company_id.street">
+                                <div class="company-info" t-field="o.company_id.street"/>
+                            </t>
+                        </div>
+
+                        <div class="ticket-separator">--------------------------------</div>
+
+                        <!-- Tipo y numero de comprobante -->
+                        <div class="ticket-document">
+                            <div class="doc-type">
+                                <t t-if="o.l10n_latam_document_type_id">
+                                    <span t-field="o.l10n_latam_document_type_id.name"/>
+                                </t>
+                                <t t-else="">FACTURA</t>
+                            </div>
+                            <div class="doc-number">
+                                Nro: <span t-field="o.name"/>
+                            </div>
+                            <div class="doc-date">
+                                Fecha: <span t-field="o.invoice_date" t-options="{'widget': 'date'}"/>
+                            </div>
+                        </div>
+
+                        <div class="ticket-separator">--------------------------------</div>
+
+                        <!-- Cliente -->
+                        <div class="ticket-customer">
+                            <div class="customer-label">CLIENTE:</div>
+                            <div class="customer-name" t-field="o.partner_id.name"/>
+                            <t t-if="o.partner_id.vat">
+                                <div class="customer-info">
+                                    <t t-if="o.partner_id.l10n_latam_identification_type_id">
+                                        <span t-field="o.partner_id.l10n_latam_identification_type_id.name"/>:
+                                    </t>
+                                    <span t-field="o.partner_id.vat"/>
+                                </div>
+                            </t>
+                            <t t-if="o.partner_id.l10n_ar_afip_responsibility_type_id">
+                                <div class="customer-info" t-field="o.partner_id.l10n_ar_afip_responsibility_type_id.name"/>
+                            </t>
+                        </div>
+
+                        <div class="ticket-separator">--------------------------------</div>
+
+                        <!-- Lineas de productos -->
+                        <div class="ticket-lines">
+                            <t t-foreach="o.invoice_line_ids.filtered(lambda l: l.display_type == 'product')" t-as="line">
+                                <div class="ticket-line">
+                                    <div class="line-product">
+                                        <t t-if="line.product_id">
+                                            <span t-field="line.product_id.name"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="line.name"/>
+                                        </t>
+                                    </div>
+                                    <div class="line-detail">
+                                        <span t-esc="'%.2f' % line.quantity"/> x
+                                        $<span t-esc="'%.2f' % line.price_unit"/>
+                                        <t t-if="line.discount">
+                                            (-<span t-esc="'%.0f' % line.discount"/>%)
+                                        </t>
+                                    </div>
+                                    <div class="line-subtotal">
+                                        $<span t-esc="'%.2f' % line.price_subtotal"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div class="ticket-separator">--------------------------------</div>
+
+                        <!-- Totales -->
+                        <div class="ticket-totals">
+                            <div class="total-line">
+                                <span>Subtotal:</span>
+                                <span>$<t t-esc="'%.2f' % o.amount_untaxed"/></span>
+                            </div>
+                            <t t-if="o.amount_tax">
+                                <div class="total-line tax-line">
+                                    <span>IVA:</span>
+                                    <span>$<t t-esc="'%.2f' % o.amount_tax"/></span>
+                                </div>
+                            </t>
+                            <div class="total-line total-final">
+                                <span>TOTAL:</span>
+                                <span>$<t t-esc="'%.2f' % o.amount_total"/></span>
+                            </div>
+                        </div>
+
+                        <div class="ticket-separator">================================</div>
+
+                        <!-- CAE/CAEA (campos sin prefijo l10n_ar_) -->
+                        <t t-if="o.afip_auth_code">
+                            <div class="ticket-afip">
+                                <div class="afip-cae">
+                                    <t t-if="o.afip_auth_mode == 'CAE'">CAE: </t>
+                                    <t t-if="o.afip_auth_mode == 'CAEA'">CAEA: </t>
+                                    <span t-field="o.afip_auth_code"/>
+                                </div>
+                                <div class="afip-vto">
+                                    Vto: <span t-field="o.afip_auth_code_due" t-options="{'widget': 'date'}"/>
+                                </div>
+                            </div>
+
+                            <!-- QR Code AFIP -->
+                            <t t-if="o.afip_qr_code">
+                                <div class="ticket-qr">
+                                    <img t-att-src="'/report/barcode/?barcode_type=QR&amp;value=%s&amp;width=200&amp;height=200' % o.afip_qr_code"
+                                         style="width: 45mm; height: 45mm;"/>
+                                </div>
+                            </t>
+                        </t>
+
+                        <div class="ticket-separator">--------------------------------</div>
+
+                        <!-- Footer -->
+                        <div class="ticket-footer">
+                            <div>Gracias por su compra</div>
+                            <t t-if="o.company_id.website">
+                                <div t-field="o.company_id.website"/>
+                            </t>
+                        </div>
+
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

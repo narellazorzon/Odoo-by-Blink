@@ -1,0 +1,163 @@
+/* Estilos para ticket termico 80mm */
+/* Modulo: l10n_ar_thermal_ticket */
+
+.ticket-80mm {
+    width: 76mm;
+    max-width: 76mm;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 9pt;
+    color: #000;
+    margin: 0 auto;
+    padding: 0;
+    line-height: 1.3;
+}
+
+.ticket-header {
+    text-align: center;
+    margin-bottom: 2mm;
+}
+
+.ticket-header .company-name {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-bottom: 1mm;
+}
+
+.ticket-header .company-info {
+    font-size: 8pt;
+}
+
+.ticket-separator {
+    text-align: center;
+    font-size: 8pt;
+    margin: 1mm 0;
+    overflow: hidden;
+    letter-spacing: -1px;
+}
+
+.ticket-document {
+    text-align: center;
+    margin: 2mm 0;
+}
+
+.ticket-document .doc-type {
+    font-size: 11pt;
+    font-weight: bold;
+}
+
+.ticket-document .doc-number {
+    font-size: 9pt;
+    font-weight: bold;
+}
+
+.ticket-document .doc-date {
+    font-size: 8pt;
+}
+
+.ticket-customer {
+    margin: 2mm 0;
+    font-size: 8pt;
+}
+
+.ticket-customer .customer-label {
+    font-weight: bold;
+}
+
+.ticket-customer .customer-name {
+    font-weight: bold;
+}
+
+.ticket-customer .customer-info {
+    font-size: 7pt;
+}
+
+.ticket-lines {
+    margin: 2mm 0;
+}
+
+.ticket-line {
+    margin-bottom: 2mm;
+    font-size: 8pt;
+}
+
+.ticket-line .line-product {
+    font-weight: bold;
+    word-wrap: break-word;
+}
+
+.ticket-line .line-detail {
+    font-size: 7pt;
+    color: #333;
+}
+
+.ticket-line .line-subtotal {
+    text-align: right;
+    font-weight: bold;
+}
+
+.ticket-totals {
+    margin: 2mm 0;
+}
+
+.ticket-totals .total-line {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8pt;
+}
+
+.ticket-totals .tax-line {
+    font-size: 7pt;
+    color: #333;
+}
+
+.ticket-totals .total-final {
+    font-size: 11pt;
+    font-weight: bold;
+    margin-top: 1mm;
+    border-top: 1px solid #000;
+    padding-top: 1mm;
+}
+
+.ticket-afip {
+    text-align: center;
+    margin: 2mm 0;
+    font-size: 7pt;
+}
+
+.ticket-afip .afip-cae {
+    font-weight: bold;
+}
+
+.ticket-qr {
+    text-align: center;
+    margin: 3mm 0;
+}
+
+.ticket-qr img {
+    max-width: 45mm;
+    height: auto;
+}
+
+.ticket-footer {
+    text-align: center;
+    margin-top: 3mm;
+    font-size: 8pt;
+}
+
+/* Evitar saltos de pagina */
+.ticket-80mm,
+.ticket-80mm * {
+    page-break-inside: avoid;
+}
+
+/* Print specific */
+@media print {
+    .ticket-80mm {
+        width: 76mm;
+    }
+}
+
+@page {
+    size: 80mm auto;
+    margin: 2mm;
+}
