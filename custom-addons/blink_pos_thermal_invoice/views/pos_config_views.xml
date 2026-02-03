@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form_thermal" model="ir.ui.view">
+        <field name="name">pos.config.form.thermal.invoice</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//setting[.//field[@name='iface_print_via_proxy']]" position="after">
+                <setting string="Factura Electrónica Térmica" help="Permite al cajero elegir si emitir factura electrónica AFIP con ticket térmico o vender sin factura">
+                    <field name="thermal_electronic_invoice"/>
+                    <div invisible="not thermal_electronic_invoice" class="content-group mt16">
+                        <div class="row">
+                            <div class="col-lg-5 o_light_label">
+                                <label string="Diario AFIP" for="afip_invoice_journal_id"/>
+                            </div>
+                            <div class="col-lg-7">
+                                <field name="afip_invoice_journal_id"
+                                    domain="[('type', '=', 'sale'), ('company_id', '=', company_id)]"
+                                    context="{'default_company_id': company_id, 'default_type': 'sale'}"/>
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

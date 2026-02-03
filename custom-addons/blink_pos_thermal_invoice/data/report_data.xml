@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Marcar reporte térmico como reporte de factura válido para account.move.send -->
+        <record id="l10n_ar_thermal_ticket.action_report_ticket_80mm" model="ir.actions.report">
+            <field name="is_invoice_report" eval="True"/>
+            <!-- Quitar del menú Print de todos los account.move para que solo se use desde POS -->
+            <field name="binding_model_id" eval="False"/>
+        </record>
+    </data>
+</odoo>
