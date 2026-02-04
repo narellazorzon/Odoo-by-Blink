@@ -1,3 +1,4 @@
-[submodule "adhoc-product"]
-	path = adhoc-product
+[submodule "custom-addons/adhoc-product"]
+	path = custom-addons/adhoc-product
 	url = https://github.com/ingadhoc/product.git
+	branch = 18.0
