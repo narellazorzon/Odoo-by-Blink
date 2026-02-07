@@ -17,19 +17,9 @@ logs/
 *.swp
 *.swo
 *~
+*.bak
+*.bak2
 
-# Filestore (puede ser muy grande)
-odoo18/.local/
-odoo18/filestore/
-
-# Sesiones
-odoo18/sessions/
-
-# Archivos de configuración con credenciales
-# NOTA: Los archivos en config/ están incluidos para facilitar desarrollo
-# Para producción, considerar externalizar secretos a variables de entorno
-# Descomentar la siguiente línea si hay configs de producción con secretos reales:
-# config/hosts/*.production.conf
 
 # SSH Keys y certificados
 *.pem
