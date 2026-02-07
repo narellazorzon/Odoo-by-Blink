@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <setting id="rounding_method" position="before">
+                <setting id="prices_with_tax" help="In the product kanban view, in addition to showing the price without taxes, add the price of the product with taxes.">
+                    <field name="group_kanban_prices_with_tax"/>
+                </setting>
+            </setting>
+        </field>
+    </record>
+
+</odoo>
