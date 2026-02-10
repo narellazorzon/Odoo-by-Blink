@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template principal -->
+        <template id="label_jewelry">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-call="blink_product_label_jewelry.label_jewelry_content"/>
+                </div>
+            </t>
+        </template>
+
+        <!-- Template que itera sobre los productos -->
+        <template id="label_jewelry_content">
+            <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
+                    <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                    <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
+                        <t t-call="blink_product_label_jewelry.label_jewelry_single"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Template de cada etiqueta individual tipo banderita -->
+        <template id="label_jewelry_single">
+            <div class="o_label_sheet o_label_jewelry">
+                <table style="width:100%; height:100%; border:none; border-collapse:collapse;">
+                    <tr>
+                        <!-- Cola izquierda: 32mm sin impresion -->
+                        <td style="width:32mm; border:none;">
+                        </td>
+                        <!-- Bloque 1: 17mm con codigo y precio -->
+                        <td style="width:16mm; text-align:center; vertical-align:middle; border:none; padding:0;">
+                            <div style="font-size:6px; font-weight:bold; line-height:1.2;">
+                                <span t-if="product.default_code" t-esc="product.default_code"/>
+                                <span t-else="">-</span>
+                            </div>
+                            <div style="font-size:5px; font-weight:bold; line-height:1.2;">
+                                <t t-set="price" t-value="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"/>
+                                <span t-esc="'${:,.0f}'.format(price).replace(',', '.')"/>
+                            </div>
+                        </td>
+                        <!-- Bloque 2: 16mm con codigo y precio (duplicado) -->
+                        <td style="width:16mm; text-align:center; vertical-align:middle; border:none; padding:0;">
+                            <div style="font-size:6px; font-weight:bold; line-height:1.2;">
+                                <span t-if="product.default_code" t-esc="product.default_code"/>
+                                <span t-else="">-</span>
+                            </div>
+                            <div style="font-size:5px; font-weight:bold; line-height:1.2;">
+                                <span t-esc="'${:,.0f}'.format(price).replace(',', '.')"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>
