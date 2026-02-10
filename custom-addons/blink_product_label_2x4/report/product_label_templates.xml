@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template principal -->
+        <template id="label_2x4">
+            <t t-call="web.basic_layout">
+                <div class="page">
+                    <t t-call="blink_product_label_2x4.label_2x4_content"/>
+                </div>
+            </t>
+        </template>
+
+        <!-- Template que itera sobre los productos -->
+        <template id="label_2x4_content">
+            <t t-set="barcode_size" t-value="'width:90mm;height:15mm'"/>
+            <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
+                <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
+                <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
+                    <t t-set="barcode" t-value="barcode_and_qty[0]"/>
+                    <t t-foreach="range(barcode_and_qty[1])" t-as="qty">
+                        <t t-call="blink_product_label_2x4.label_2x4_single"/>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+        <!-- Template de cada etiqueta individual -->
+        <template id="label_2x4_single">
+            <div class="o_label_sheet o_label_2x4">
+                <table style="width:100%; height:100%; border:none; border-collapse:collapse;">
+                    <!-- Código de barras -->
+                    <tr>
+                        <td style="text-align:center; padding:2mm 0; border:none;">
+                            <t t-if="barcode">
+                                <div t-out="barcode" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
+                                <div style="font-size:12px; margin-top:1mm;">
+                                    <span t-out="barcode"/>
+                                </div>
+                            </t>
+                        </td>
+                    </tr>
+                    <!-- Nombre del producto -->
+                    <tr>
+                        <td style="text-align:center; font-size:16px; font-weight:bold; padding:2mm; border:none;">
+                            <span t-if="product.is_product_variant" t-field="product.display_name"/>
+                            <span t-else="" t-field="product.name"/>
+                        </td>
+                    </tr>
+                    <!-- Precio centrado -->
+                    <tr>
+                        <td style="text-align:center; font-size:18px; font-weight:bold; padding:2mm; border:none;">
+                            <span t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
+                                  t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id}"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Paperformat para etiqueta 2x4 pulgadas (102mm x 51mm) landscape -->
+        <!-- En Landscape: page_width se convierte en alto, page_height en ancho -->
+        <record id="paperformat_label_2x4" model="report.paperformat">
+            <field name="name">Etiqueta 2x4 pulgadas</field>
+            <field name="default" eval="False"/>
+            <field name="format">custom</field>
+            <field name="page_height">102</field>
+            <field name="page_width">51</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="disable_shrinking" eval="True"/>
+            <field name="dpi">96</field>
+        </record>
+
+        <!-- Reporte de etiqueta 2x4 -->
+        <record id="report_product_label_2x4" model="ir.actions.report">
+            <field name="name">Product Label 2x4 (PDF)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">blink_product_label_2x4.label_2x4</field>
+            <field name="report_file">blink_product_label_2x4.label_2x4</field>
+            <field name="paperformat_id" ref="paperformat_label_2x4"/>
+            <field name="print_report_name">"Product Label 2x4 - %s" % (object.name)</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>
