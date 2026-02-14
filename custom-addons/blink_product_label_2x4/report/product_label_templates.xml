@@ -12,7 +12,7 @@
 
         <!-- Template que itera sobre los productos -->
         <template id="label_2x4_content">
-            <t t-set="barcode_size" t-value="'width:90mm;height:15mm'"/>
+            <t t-set="barcode_size" t-value="'width:85.5mm;height:15mm'"/>
             <t t-foreach="quantity.items()" t-as="barcode_and_qty_by_product">
                 <t t-set="product" t-value="barcode_and_qty_by_product[0]"/>
                 <t t-foreach="barcode_and_qty_by_product[1]" t-as="barcode_and_qty">
@@ -33,7 +33,7 @@
                         <td style="text-align:center; padding:2mm 0; border:none;">
                             <t t-if="barcode">
                                 <div t-out="barcode" t-options="{'widget': 'barcode', 'quiet': 0, 'symbology': 'auto', 'img_style': barcode_size}"/>
-                                <div style="font-size:12px; margin-top:1mm;">
+                                <div style="font-size:13.48px; margin-top:1mm;">
                                     <span t-out="barcode"/>
                                 </div>
                             </t>
@@ -41,14 +41,14 @@
                     </tr>
                     <!-- Nombre del producto -->
                     <tr>
-                        <td style="text-align:center; font-size:16px; font-weight:bold; padding:2mm; border:none;">
+                        <td style="text-align:center; font-size:16.96px; font-weight:bold; padding:0.5mm 2mm 0 2mm; line-height:1; border:none;">
                             <span t-if="product.is_product_variant" t-field="product.display_name"/>
                             <span t-else="" t-field="product.name"/>
                         </td>
                     </tr>
                     <!-- Precio centrado -->
                     <tr>
-                        <td style="text-align:center; font-size:18px; font-weight:bold; padding:2mm; border:none;">
+                        <td style="text-align:center; font-size:20.03px; font-weight:bold; padding:0 2mm 0.5mm 2mm; line-height:1; border:none;">
                             <span t-out="pricelist._get_product_price(product, 1, currency=pricelist.currency_id or product.currency_id)"
                                   t-options="{'widget': 'monetary', 'display_currency': pricelist.currency_id or product.currency_id}"/>
                         </td>

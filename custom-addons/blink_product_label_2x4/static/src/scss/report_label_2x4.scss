@@ -1,7 +1,7 @@
-/* Estilos para etiqueta 2x4 pulgadas (102mm x 51mm landscape) */
+/* Estilos para etiqueta 1.6x3.6 pulgadas (91mm x 41mm landscape) */
 .o_label_sheet.o_label_2x4 {
-    width: 102mm;
-    height: 51mm;
+    width: 91mm;
+    height: 41mm;
     page-break-before: always;
     overflow: hidden;
     /* Resetear márgenes negativos del CSS base de Odoo */
@@ -20,4 +20,10 @@
 
 .o_label_sheet.o_label_2x4 td {
     padding: 1mm 2mm;
+    border: none !important;
+}
+
+.o_label_sheet.o_label_2x4 table,
+.o_label_sheet.o_label_2x4 tr {
+    border: none !important;
 }

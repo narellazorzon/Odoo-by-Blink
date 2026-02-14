@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Paperformat para etiqueta 2x4 pulgadas (102mm x 51mm) landscape -->
+        <!-- Paperformat para etiqueta 1.6x3.6 pulgadas (91.44mm x 40.64mm) landscape -->
         <!-- En Landscape: page_width se convierte en alto, page_height en ancho -->
         <record id="paperformat_label_2x4" model="report.paperformat">
-            <field name="name">Etiqueta 2x4 pulgadas</field>
+            <field name="name">Etiqueta 1.6x3.6 pulgadas</field>
             <field name="default" eval="False"/>
             <field name="format">custom</field>
-            <field name="page_height">102</field>
-            <field name="page_width">51</field>
+            <field name="page_height">91</field>
+            <field name="page_width">41</field>
             <field name="orientation">Landscape</field>
             <field name="margin_top">0</field>
             <field name="margin_bottom">0</field>
