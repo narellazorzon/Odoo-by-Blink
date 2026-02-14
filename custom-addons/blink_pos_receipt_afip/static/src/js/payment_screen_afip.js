@@ -4,6 +4,12 @@ import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment
 import { patch } from "@web/core/utils/patch";
 
 patch(PaymentScreen.prototype, {
+    shouldDownloadInvoice() {
+        if (this.currentOrder?.is_electronic_invoice) {
+            return false;
+        }
+        return super.shouldDownloadInvoice();
+    },
     async afterOrderValidation() {
         // Fetch AFIP data ANTES de mostrar el receipt screen
         const order = this.currentOrder;
