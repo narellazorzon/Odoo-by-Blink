@@ -27,7 +27,18 @@ except ImportError:
     sys.exit(1)
 
 app = Flask(__name__)
-CORS(app, origins="*")
+CORS(app, resources={r"/*": {"origins": "*", "supports_credentials": True}})
+
+
+@app.before_request
+def handle_preflight():
+    """Responder a todas las preflight requests (OPTIONS) con 200."""
+    if request.method == "OPTIONS":
+        response = app.make_default_options_response()
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type"
+        return response
 
 logging.basicConfig(
     level=logging.INFO,
@@ -299,6 +310,15 @@ def default_printer_action():
     except Exception as e:
         log.error("Error en impresion: %s\n%s", e, traceback.format_exc())
         return jsonrpc_response(False)
+
+
+@app.route("/hw_proxy/<path:endpoint>", methods=["GET", "POST", "OPTIONS"])
+def catch_all(endpoint):
+    """Catch-all para endpoints no implementados (customer_facing_display, etc)."""
+    log.debug("Endpoint no implementado: /hw_proxy/%s", endpoint)
+    if request.method == "GET":
+        return jsonify({})
+    return jsonrpc_response({})
 
 
 # ---------------------------------------------------------------------------
