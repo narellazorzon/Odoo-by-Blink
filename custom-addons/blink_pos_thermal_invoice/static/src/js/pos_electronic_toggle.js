@@ -41,7 +41,17 @@ patch(PaymentScreen.prototype, {
         }
         const newValue = !order.is_electronic_invoice;
         order.is_electronic_invoice = newValue;
-        order.set_to_invoice(newValue);
+        // Siempre generar factura: con toggle ON va a diario AFIP,
+        // con toggle OFF va a diario Ventas Preimpreso (default)
+        order.set_to_invoice(true);
+    },
+
+    shouldDownloadInvoice() {
+        // Nunca descargar PDF desde POS: el recibo se muestra en pantalla
+        if (this.pos.config.thermal_electronic_invoice) {
+            return false;
+        }
+        return super.shouldDownloadInvoice(...arguments);
     },
 
     toggleIsToInvoice() {
