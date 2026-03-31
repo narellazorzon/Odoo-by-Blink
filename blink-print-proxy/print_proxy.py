@@ -8,6 +8,8 @@ JPEG del recibo y las envia a la impresora via Windows GDI.
 import base64
 import io
 import logging
+import logging.handlers
+import os
 import sys
 import traceback
 
@@ -16,6 +18,9 @@ from flask_cors import CORS
 from PIL import Image
 
 from config import PROXY_PORT, PROXY_HOST, PRINTER_NAME
+
+# Directorio base (donde esta este script)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Windows-only imports
 try:
@@ -40,11 +45,27 @@ def handle_preflight():
         response.headers["Access-Control-Allow-Headers"] = "Content-Type"
         return response
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-)
+# Logging: consola + archivo
+LOG_DIR = os.path.join(BASE_DIR, "logs")
+os.makedirs(LOG_DIR, exist_ok=True)
+
 log = logging.getLogger("blink-print-proxy")
+log.setLevel(logging.INFO)
+
+_fmt = logging.Formatter("%(asctime)s [%(levelname)s] %(message)s")
+
+_console = logging.StreamHandler()
+_console.setFormatter(_fmt)
+log.addHandler(_console)
+
+_file = logging.handlers.RotatingFileHandler(
+    os.path.join(LOG_DIR, "proxy.log"),
+    maxBytes=2 * 1024 * 1024,  # 2 MB
+    backupCount=3,
+    encoding="utf-8",
+)
+_file.setFormatter(_fmt)
+log.addHandler(_file)
 
 
 # ---------------------------------------------------------------------------
