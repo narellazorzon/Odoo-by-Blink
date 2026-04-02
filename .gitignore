@@ -48,6 +48,9 @@ credentials/
 .DS_Store
 Thumbs.db
 
+# Blink Print Proxy (se distribuye aparte, no va en el servidor)
+blink-print-proxy/
+
 # Archivos de debug específicos del proyecto
 odoo_invoice_debug.html
 report_invoice_custom_servidor.xml
