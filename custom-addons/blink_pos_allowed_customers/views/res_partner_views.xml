@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add available_in_pos to partner form view -->
+    <record id="view_partner_form_inherit_pos_allowed" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.pos.allowed</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <field name="website" position="after">
+                <field name="available_in_pos"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Add available_in_pos to partner tree view -->
+    <record id="view_partner_tree_inherit_pos_allowed" model="ir.ui.view">
+        <field name="name">res.partner.tree.inherit.pos.allowed</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="email" position="after">
+                <field name="available_in_pos" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Add filter in search view -->
+    <record id="view_partner_search_inherit_pos_allowed" model="ir.ui.view">
+        <field name="name">res.partner.search.inherit.pos.allowed</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <filter name="type_company" position="after">
+                <filter name="available_in_pos" string="POS"
+                        domain="[('available_in_pos', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
