@@ -4,15 +4,55 @@
     <t t-name="blink_pos_receipt_afip.OrderReceipt"
        t-inherit="point_of_sale.OrderReceipt"
        t-inherit-mode="extension">
+
+        <!-- 1. Separador + Tipo/Número de factura + Fecha/hora + Datos cliente → después del header -->
+        <xpath expr="//ReceiptHeader" position="after">
+            <t t-if="props.data.afip_receipt_data">
+                <div class="text-center">--------------------------------</div>
+                <div class="text-center" style="margin: 4px 0 2px 0;">
+                    <div style="font-weight: bold; font-size: 14px;">
+                        <t t-esc="props.data.afip_receipt_data.document_number"/>
+                    </div>
+                    <div style="font-size: 11px; margin-top: 2px;">
+                        <t t-esc="props.data.afip_receipt_data.invoice_datetime"/>
+                    </div>
+                </div>
+                <div class="text-center">--------------------------------</div>
+
+                <!-- Datos del cliente -->
+                <div style="font-size: 11px; margin: 4px 0 2px 0;">
+                    <div style="font-weight: bold; margin-bottom: 2px;">CLIENTE</div>
+                    <div>
+                        <t t-esc="props.data.afip_receipt_data.partner_name or '(no informado)'"/>
+                    </div>
+                    <div>
+                        CUIT: <t t-esc="props.data.afip_receipt_data.partner_vat or '(no informado)'"/>
+                    </div>
+                    <div>
+                        <t t-esc="props.data.afip_receipt_data.partner_afip_responsibility or '(no informado)'"/>
+                    </div>
+                    <div>
+                        <t t-esc="props.data.afip_receipt_data.partner_address or '(no informado)'"/>
+                    </div>
+                </div>
+                <div class="text-center">--------------------------------</div>
+            </t>
+        </xpath>
+
+        <!-- 2. Cashier al final, después de "Powered by Odoo" -->
+        <xpath expr="//div[hasclass('pos-receipt-order-data')][p]" position="after">
+            <t t-if="props.data.headerData.cashier">
+                <div class="text-center" style="font-size: 11px; margin-top: 4px;">
+                    <t t-esc="props.data.headerData.cashier"/>
+                </div>
+            </t>
+        </xpath>
+
+        <!-- 3. AFIP footer: CAE, Vto, QR -->
         <xpath expr="//div[hasclass('before-footer')]" position="after">
             <t t-if="props.data.afip_receipt_data">
                 <div class="text-center">--------------------------------</div>
                 <div class="pos-receipt-afip text-center" style="margin: 4px 0;">
-                    <!-- Numero de comprobante -->
-                    <div t-if="props.data.afip_receipt_data.document_number"
-                         style="font-weight: bold; font-size: 12px;">
-                        <t t-esc="props.data.afip_receipt_data.document_number"/>
-                    </div>
                     <!-- CAE / CAEA -->
                     <div style="font-size: 11px; margin-top: 2px;">
                         <t t-if="props.data.afip_receipt_data.afip_auth_mode === 'CAE'">CAE: </t>
@@ -34,6 +74,7 @@
                 </div>
             </t>
         </xpath>
+
     </t>
 
     <t t-name="blink_pos_receipt_afip.ReceiptHeaderNoTracking"
@@ -43,6 +84,8 @@
         <xpath expr="//h1[hasclass('tracking-number')]" position="replace"/>
         <!-- Remove small tracking number -->
         <xpath expr="//span[hasclass('tracking-number')]/.." position="replace"/>
+        <!-- Remove cashier from header (se mueve al pie del recibo) -->
+        <xpath expr="//div[hasclass('cashier')]" position="replace"/>
     </t>
 
 </templates>
