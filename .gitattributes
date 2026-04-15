@@ -1,0 +1,12 @@
+# Normalizar todos los archivos de texto a LF en el repo
+* text=auto eol=lf
+
+# Binarios explícitos
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.pyc binary
